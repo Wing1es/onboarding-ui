@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Horizon Recommender Testbed</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="glass-container">
+        <header>
+        </header>
+
+        <main>
+            <div class="control-panel">
+                <div class="input-group">
+                    <label for="engine-select">Select Engine</label>
+                    <select id="engine-select">
+                        <option value="https://staging-ai-api.myhorizon.club">Horizon AI (Non Scalable)</option>
+                        <option value="https://shekarss-hybrid-search.hf.space">Hybrid Search (Best approach and
+                            Scalable)</option>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <label for="bio-input">User Bio</label>
+                    <textarea id="bio-input"
+                        placeholder="e.g. I am a bride looking for banquet halls, photography, and serenity..."
+                        rows="4"></textarea>
+                </div>
+
+                <button id="recommend-btn">Recommend</button>
+            </div>
+
+            <div class="results-panel">
+                <h2>Taxonomy Results</h2>
+                <div id="taxonomy-tree" class="taxonomy-tree">
+                    <p class="placeholder-text">Enter a bio and click Recommend.</p>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script src="script.js"></script>
+</body>
+
+</html>
