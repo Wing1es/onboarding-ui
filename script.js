@@ -1,16 +1,31 @@
-const engineSelect = document.getElementById('engine-select');
 const bioInput = document.getElementById('bio-input');
 const recommendBtn = document.getElementById('recommend-btn');
 const treeContainer = document.getElementById('taxonomy-tree');
 
 async function fetchTaxonomy(params = {}) {
-    const baseUrl = engineSelect.value;
+    const baseUrl = 'https://shekarss-hybrid-search.hf.space';
     const url = new URL(`${baseUrl}/api/v1/taxonomy`);
-    
+
+    const nameInput = document.getElementById('name-input');
+    const genderSelect = document.getElementById('gender-select');
+
     // Always include bio if present
     const bio = bioInput.value.trim();
+    const name = nameInput ? nameInput.value.trim() : "";
+    const gender = genderSelect ? genderSelect.value : "";
+
+    if (name) {
+        url.searchParams.append('name', name);
+    } else if (bio) {
+        url.searchParams.append('name', 'TestUser');
+    }
+
     if (bio) {
         url.searchParams.append('bio', bio);
+    }
+
+    if (gender) {
+        url.searchParams.append('gender', gender);
     }
 
     if (params.universe_id) url.searchParams.append('universe_id', params.universe_id);
@@ -32,14 +47,27 @@ async function fetchTaxonomy(params = {}) {
 
 function createNodeElement(data, type) {
     const isRecommended = data.is_recommended;
-    
+
     const nodeDiv = document.createElement('div');
     nodeDiv.className = 'taxonomy-node';
 
     if (type === 'club') {
         nodeDiv.className = `club-card ${isRecommended ? 'recommended' : ''}`;
+
+        let matchBadgeHtml = '';
+        if (data.match_type) {
+            const badgeClass = data.match_type === 'direct' ? 'badge-direct' : 'badge-indirect';
+            matchBadgeHtml = `<span class="badge ${badgeClass}">${data.match_type.toUpperCase()} MATCH</span>`;
+        }
+
+        let reasoningHtml = '';
+        if (data.reasoning) {
+            reasoningHtml = `<div class="club-reasoning">💡 <strong>AI Reasoning:</strong> ${data.reasoning}</div>`;
+        }
+
         nodeDiv.innerHTML = `
-            <div class="club-title">${data.club_name}</div>
+            <div class="club-title">${data.club_name} ${matchBadgeHtml}</div>
+            ${reasoningHtml}
         `;
         return nodeDiv;
     }
@@ -64,10 +92,10 @@ function createNodeElement(data, type) {
             header.querySelector('.badge').innerHTML = '<span class="loading"></span>';
             const childParams = type === 'universe' ? { universe_id: id } : { community_id: id };
             const childrenData = await fetchTaxonomy(childParams);
-            
+
             header.querySelector('.badge').textContent = type;
             childrenContainer.innerHTML = '';
-            
+
             if (childrenData.length === 0) {
                 childrenContainer.innerHTML = '<p class="placeholder-text">Empty.</p>';
             } else {

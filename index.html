@@ -16,17 +16,24 @@
 
         <main>
             <div class="control-panel">
+
+
                 <div class="input-group">
-                    <label for="engine-select">Select Engine</label>
-                    <select id="engine-select">
-                        <option value="https://staging-ai-api.myhorizon.club">Horizon AI (Non Scalable)</option>
-                        <option value="https://shekarss-hybrid-search.hf.space">Hybrid Search (Best approach and
-                            Scalable)</option>
+                    <label for="name-input">Name (Required)</label>
+                    <input type="text" id="name-input" placeholder="e.g. Shekar">
+                </div>
+
+                <div class="input-group">
+                    <label for="gender-select">Gender (Optional)</label>
+                    <select id="gender-select">
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                        <option value="Other">Other</option>
                     </select>
                 </div>
 
                 <div class="input-group">
-                    <label for="bio-input">User Bio</label>
+                    <label for="bio-input">User Bio (Required)</label>
                     <textarea id="bio-input"
                         placeholder="e.g. I am a bride looking for banquet halls, photography, and serenity..."
                         rows="4"></textarea>
