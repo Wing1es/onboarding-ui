@@ -4,6 +4,7 @@ const treeContainer = document.getElementById('taxonomy-tree');
 
 async function fetchTaxonomy(params = {}) {
     const baseUrl = 'https://shekarss-hybrid-search.hf.space';
+    // const baseUrl = 'http://localhost:8001';
     const url = new URL(`${baseUrl}/api/v1/taxonomy`);
 
     const nameInput = document.getElementById('name-input');
@@ -68,6 +69,10 @@ function createNodeElement(data, type) {
         nodeDiv.innerHTML = `
             <div class="club-title">${data.club_name} ${matchBadgeHtml}</div>
             ${reasoningHtml}
+            <div class="feedback-buttons" style="margin-top: 10px; display: flex; gap: 10px;">
+                <button class="btn-feedback" onclick="submitFeedback('${data.club_id}', '${data.club_name}', ${isRecommended}, 'right', this)" style="background: #2a2a2a; border: 1px solid #444; border-radius: 5px; padding: 5px 10px; cursor: pointer;">👍 Right</button>
+                <button class="btn-feedback" onclick="submitFeedback('${data.club_id}', '${data.club_name}', ${isRecommended}, 'wrong', this)" style="background: #2a2a2a; border: 1px solid #444; border-radius: 5px; padding: 5px 10px; cursor: pointer;">👎 Wrong</button>
+            </div>
         `;
         return nodeDiv;
     }
@@ -112,6 +117,42 @@ function createNodeElement(data, type) {
     nodeDiv.appendChild(header);
     nodeDiv.appendChild(childrenContainer);
     return nodeDiv;
+}
+
+// Global variables to grab input for feedback
+function getBioInput() {
+    return document.getElementById('bio-input').value.trim();
+}
+
+async function submitFeedback(clubId, clubName, wasRecommended, feedbackType, btnElement) {
+    const bio = getBioInput();
+    if (!bio) {
+        alert("Bio is missing. Cannot submit feedback without the original bio.");
+        return;
+    }
+    
+    // UI update
+    const parent = btnElement.parentElement;
+    parent.innerHTML = `<span style="color: #4CAF50; font-size: 0.9em;">Thanks for your feedback!</span>`;
+
+    // Send to backend
+    try {
+        await fetch(`${baseUrl}/api/v1/feedback`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                bio: bio,
+                club_id: clubId,
+                club_name: clubName,
+                was_recommended: wasRecommended,
+                user_feedback: feedbackType
+            })
+        });
+    } catch (e) {
+        console.error("Failed to submit feedback", e);
+    }
 }
 
 recommendBtn.addEventListener('click', async () => {
