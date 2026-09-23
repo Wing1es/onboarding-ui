@@ -71,6 +71,7 @@ function createNodeElement(data, type) {
             ${reasoningHtml}
             ${isRecommended ? `
             <div class="feedback-buttons" style="margin-top: 10px; display: flex; gap: 10px;">
+                <button class="btn-feedback" onclick="submitFeedback('${data.club_id}', '${data.club_name}', true, 'right', this)" style="background: #2a2a2a; border: 1px solid #444; border-radius: 5px; padding: 5px 10px; cursor: pointer;">👍 Right</button>
                 <button class="btn-feedback" onclick="submitFeedback('${data.club_id}', '${data.club_name}', true, 'wrong', this)" style="background: #2a2a2a; border: 1px solid #444; border-radius: 5px; padding: 5px 10px; cursor: pointer;">👎 Wrong</button>
             </div>
             ` : ''}
