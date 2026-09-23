@@ -16,9 +16,9 @@ async function fetchTaxonomy(params = {}) {
     const gender = genderSelect ? genderSelect.value : "";
 
     if (name) {
-        url.searchParams.append('username', name);
+        url.searchParams.append('name', name);
     } else if (bio) {
-        url.searchParams.append('username', 'TestUser');
+        url.searchParams.append('name', 'TestUser');
     }
 
     if (bio) {
