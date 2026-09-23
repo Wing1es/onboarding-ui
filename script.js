@@ -2,9 +2,9 @@ const bioInput = document.getElementById('bio-input');
 const recommendBtn = document.getElementById('recommend-btn');
 const treeContainer = document.getElementById('taxonomy-tree');
 
+const baseUrl = 'https://shekarss-hybrid-search.hf.space';
+
 async function fetchTaxonomy(params = {}) {
-    const baseUrl = 'https://shekarss-hybrid-search.hf.space';
-    // const baseUrl = 'http://localhost:8001';
     const url = new URL(`${baseUrl}/api/v1/taxonomy`);
 
     const nameInput = document.getElementById('name-input');
@@ -16,9 +16,9 @@ async function fetchTaxonomy(params = {}) {
     const gender = genderSelect ? genderSelect.value : "";
 
     if (name) {
-        url.searchParams.append('name', name);
+        url.searchParams.append('username', name);
     } else if (bio) {
-        url.searchParams.append('name', 'TestUser');
+        url.searchParams.append('username', 'TestUser');
     }
 
     if (bio) {
@@ -69,10 +69,11 @@ function createNodeElement(data, type) {
         nodeDiv.innerHTML = `
             <div class="club-title">${data.club_name} ${matchBadgeHtml}</div>
             ${reasoningHtml}
+            ${isRecommended ? `
             <div class="feedback-buttons" style="margin-top: 10px; display: flex; gap: 10px;">
-                <button class="btn-feedback" onclick="submitFeedback('${data.club_id}', '${data.club_name}', ${isRecommended}, 'right', this)" style="background: #2a2a2a; border: 1px solid #444; border-radius: 5px; padding: 5px 10px; cursor: pointer;">👍 Right</button>
-                <button class="btn-feedback" onclick="submitFeedback('${data.club_id}', '${data.club_name}', ${isRecommended}, 'wrong', this)" style="background: #2a2a2a; border: 1px solid #444; border-radius: 5px; padding: 5px 10px; cursor: pointer;">👎 Wrong</button>
+                <button class="btn-feedback" onclick="submitFeedback('${data.club_id}', '${data.club_name}', true, 'wrong', this)" style="background: #2a2a2a; border: 1px solid #444; border-radius: 5px; padding: 5px 10px; cursor: pointer;">👎 Wrong</button>
             </div>
+            ` : ''}
         `;
         return nodeDiv;
     }
@@ -130,7 +131,7 @@ async function submitFeedback(clubId, clubName, wasRecommended, feedbackType, bt
         alert("Bio is missing. Cannot submit feedback without the original bio.");
         return;
     }
-    
+
     // UI update
     const parent = btnElement.parentElement;
     parent.innerHTML = `<span style="color: #4CAF50; font-size: 0.9em;">Thanks for your feedback!</span>`;
